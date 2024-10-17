@@ -22,30 +22,15 @@ double divide(const std::vector<double>& operands) {
     for (size_t i = 1; i < operands.size(); ++i) {
         if (operands[i] == 0) {
             std::cerr << "Error: Division by zero is not allowed!\n";
-            exit(1);  // Прерываем выполнение программы при делении на ноль.
+            exit(1);
         }
         result /= operands[i];
     }
     return result;
 }
 
-// Функция для проверки, что строка содержит корректное число
-bool is_valid_number(const char* str) {
-    char* endptr;
-    std::strtod(str, &endptr);  // Преобразуем строку в число с плавающей точкой
-    return *endptr == '\0';     // Если в конце строки указатель указывает на нуль-терминатор, число валидно
-}
-
 int main(int argc, char* argv[]) {
-    // Проверка: должно быть 4-6 аргументов (имя программы + -o + операция + от 2 до 4 операндов)
-    if (argc < 5 || argc > 7) {
-        print_usage();
-        return 1;
-    }
-
-    // Проверка на наличие флага -o
-    if (std::strcmp(argv[1], "-o") != 0) {
-        std::cerr << "Error: Expected flag -o\n";
+    if (argc < 4 || argc > 6) {
         print_usage();
         return 1;
     }
@@ -53,18 +38,10 @@ int main(int argc, char* argv[]) {
     std::string operation = argv[2];
     std::vector<double> operands;
 
-    // Чтение операндов (должно быть минимум 2 и максимум 4 операнда)
     for (int i = 3; i < argc; ++i) {
-        // Проверяем, что каждый операнд является корректным числом
-        if (!is_valid_number(argv[i])) {
-            std::cerr << "Error: Invalid operand '" << argv[i] << "'\n";
-            return 1;
-        }
-
         operands.push_back(std::atof(argv[i]));
     }
 
-    // Выполнение операций на основе команды
     if (operation == "mul") {
         std::cout << "Result: " << multiply(operands) << std::endl;
     } else if (operation == "div") {
@@ -76,8 +53,4 @@ int main(int argc, char* argv[]) {
 
     return 0;
 }
-
-
-
-
 
