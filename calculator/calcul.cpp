@@ -29,9 +29,23 @@ double divide(const std::vector<double>& operands) {
     return result;
 }
 
+// Функция для проверки, что строка содержит корректное число
+bool is_valid_number(const char* str) {
+    char* endptr;
+    std::strtod(str, &endptr);  // Преобразуем строку в число с плавающей точкой
+    return *endptr == '\0';     // Если в конце строки указатель указывает на нуль-терминатор, число валидно
+}
+
 int main(int argc, char* argv[]) {
-    // Проверка на корректное количество аргументов (от 2 до 4 операндов)
-    if (argc < 4 || argc > 6) {
+    // Проверка: должно быть 4-6 аргументов (имя программы + -o + операция + от 2 до 4 операндов)
+    if (argc < 5 || argc > 7) {
+        print_usage();
+        return 1;
+    }
+
+    // Проверка на наличие флага -o
+    if (std::strcmp(argv[1], "-o") != 0) {
+        std::cerr << "Error: Expected flag -o\n";
         print_usage();
         return 1;
     }
@@ -39,8 +53,14 @@ int main(int argc, char* argv[]) {
     std::string operation = argv[2];
     std::vector<double> operands;
 
-    // Чтение операндов (от 2 до 4)
+    // Чтение операндов (должно быть минимум 2 и максимум 4 операнда)
     for (int i = 3; i < argc; ++i) {
+        // Проверяем, что каждый операнд является корректным числом
+        if (!is_valid_number(argv[i])) {
+            std::cerr << "Error: Invalid operand '" << argv[i] << "'\n";
+            return 1;
+        }
+
         operands.push_back(std::atof(argv[i]));
     }
 
@@ -56,4 +76,8 @@ int main(int argc, char* argv[]) {
 
     return 0;
 }
+
+
+
+
 
